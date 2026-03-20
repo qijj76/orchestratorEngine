@@ -118,6 +118,10 @@ class MongoWorkflowStateStore(WorkflowStateStore):
         cursor = self._coll.find({"workflow_id": workflow_id})
         return [_doc_to_workflow_state(d) async for d in cursor]
 
+    async def list_all(self) -> list[WorkflowInstanceState]:
+        cursor = self._coll.find({})
+        return [_doc_to_workflow_state(d) async for d in cursor]
+
     async def ensure_indexes(self) -> None:
         """Create recommended indexes. Call once at startup."""
         await self._coll.create_index("instance_id", unique=True)

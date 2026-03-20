@@ -42,6 +42,11 @@ class WorkflowStateStore(ABC):
         """List all instances of a workflow."""
         ...
 
+    @abstractmethod
+    async def list_all(self) -> list[WorkflowInstanceState]:
+        """List all workflow instances."""
+        ...
+
 
 class InMemoryWorkflowStateStore(WorkflowStateStore):
     """In-memory implementation of workflow state store."""
@@ -63,3 +68,6 @@ class InMemoryWorkflowStateStore(WorkflowStateStore):
 
     async def list_by_workflow(self, workflow_id: str) -> list[WorkflowInstanceState]:
         return [s for s in self._store.values() if s.workflow_id == workflow_id]
+
+    async def list_all(self) -> list[WorkflowInstanceState]:
+        return list(self._store.values())
