@@ -158,6 +158,11 @@ class MongoTokenStore(TokenStore):
         )
         return [_doc_to_token(d) async for d in cursor]
 
+    async def list_pending(self) -> list[ApprovalToken]:
+        """List pending tokens across all workflow instances."""
+        cursor = self._coll.find({"status": TokenStatus.PENDING.value})
+        return [_doc_to_token(d) async for d in cursor]
+
     async def list_by_step(self, instance_id: str, step_id: str) -> list[ApprovalToken]:
         cursor = self._coll.find({"instance_id": instance_id, "step_id": step_id})
         return [_doc_to_token(d) async for d in cursor]
